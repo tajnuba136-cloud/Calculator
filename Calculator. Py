@@ -1,0 +1,59 @@
+import customtkinter as ctk
+
+# --- Functions ---
+def press(key):
+    entry_var.set(entry_var.get() + str(key))
+
+def clear():
+    entry_var.set("")
+
+def calculate():
+    try:
+        result = str(eval(entry_var.get()))
+        entry_var.set(result)
+    except:
+        entry_var.set("Error")
+
+# --- App Window ---
+ctk.set_appearance_mode("dark")   # "dark" or "light"
+ctk.set_default_color_theme("blue")  # Android-style blue theme
+
+app = ctk.CTk()
+app.title("Android Calculator")
+app.geometry("350x550")
+app.resizable(False, False)
+
+entry_var = ctk.StringVar()
+
+# --- Display ---
+entry = ctk.CTkEntry(
+    app, textvariable=entry_var,
+    font=("Arial", 28), justify="right",
+    width=320, height=80
+)
+entry.pack(pady=20)
+
+# --- Button Grid Frame ---
+frame = ctk.CTkFrame(app)
+frame.pack(pady=10)
+
+# Button layout like Android calculator
+buttons = [
+    ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("/", 1, 3),
+    ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("*", 2, 3),
+    ("1", 3, 0), ("2", 3, 1), ("3", 3, 2), ("-", 3, 3),
+    ("0", 4, 0), (".", 4, 1), ("=", 4, 2), ("+", 4, 3),
+]
+
+for (text, row, col) in buttons:
+    if text == "=":
+        btn = ctk.CTkButton(frame, text=text, width=70, height=70, fg_color="#ff9500", hover_color="#e68900", font=("Arial", 20), command=calculate)
+    else:
+        btn = ctk.CTkButton(frame, text=text, width=70, height=70, font=("Arial", 20), command=lambda t=text: press(t))
+    btn.grid(row=row, column=col, padx=5, pady=5)
+
+# --- Clear button (full width) ---
+clear_btn = ctk.CTkButton(app, text="Clear", width=320, height=60, fg_color="#d9534f", hover_color="#c9302c", font=("Arial", 18), command=clear)
+clear_btn.pack(pady=15)
+
+app.mainloop()
